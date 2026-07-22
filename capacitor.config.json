@@ -1,0 +1,6 @@
+{
+  "appId": "com.antigravity.blockbreaker",
+  "appName": "ブロック崩し",
+  "webDir": ".",
+  "bundledWebRuntime": false
+}

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>スマホ用ブロック崩し</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- タイトル画面 -->
+        <div id="title-screen" class="screen active">
+            <img src="assets/title.png" alt="Title" id="title-image">
+            <div id="title-overlay">
+                <h1 class="title-text">ブロック崩し</h1>
+                <button id="start-btn">スタート</button>
+                <button id="settings-btn" class="small-btn" style="margin-top: 10px;">設定</button>
+            </div>
+        </div>
+
+        <!-- ステージ選択画面 -->
+        <div id="stage-select-screen" class="screen">
+            <div id="stage-info-bar">
+                <div id="stage-params">
+                    <div>ブロック復活量: <span id="param-restore-value">12.0</span><span class="unit">%</span> <span
+                            id="max-restore-label" class="max-label">最大強化！</span></div>
+                    <div>レーザー準備時間: <span id="param-laser-value">100.0</span><span class="unit">秒</span> <span
+                            id="max-laser-label" class="max-label">最大強化！</span></div>
+                    <div>アイテムドロップ率: <span id="param-item-value">4.0</span><span class="unit">%</span> <span
+                            id="max-item-label" class="max-label">最大強化！</span></div>
+                    <div>ポイント獲得倍率: <span id="param-bonus-value">20.0</span><span class="unit">%</span> <span
+                            id="max-bonus-label" class="max-label">最大強化！</span></div>
+                    <div>コマーシャル頻度: <span id="param-ad-value">70.0</span><span class="unit">%</span> <span
+                            id="max-ad-label" class="max-label">最大強化！</span></div>
+                </div>
+                <div id="points-display">Total Points: <span id="total-points">0</span></div>
+            </div>
+            <h2>ステージ選択</h2>
+
+            <!-- モード選択 -->
+            <div id="mode-selector">
+                <div class="mode-toggle">
+                    <button id="mode-normal" class="mode-btn active">NORMAL</button>
+                    <button id="mode-extra" class="mode-btn">EXTRA</button>
+                    <button id="mode-gallery" class="mode-btn">GALLERY</button>
+                </div>
+                <button id="extra-info-btn" class="info-btn">ⓘ</button>
+            </div>
+
+            <div class="stage-buttons">
+                <div class="stage-item" data-stage="1">
+                    <button class="stage-btn" data-stage="1">
+                        <img src="assets/1c.png" alt="" class="stage-thumb">
+                        <span>Stage 1</span>
+                    </button>
+                </div>
+                <div class="stage-item locked" data-stage="2">
+                    <button class="stage-btn" data-stage="2" disabled>
+                        <img src="assets/2c.png" alt="" class="stage-thumb">
+                        <span>Stage 2</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">5,000 pts</span>
+                    </div>
+                </div>
+                <div class="stage-item locked" data-stage="3">
+                    <button class="stage-btn" data-stage="3" disabled>
+                        <img src="assets/3c.png" alt="" class="stage-thumb">
+                        <span>Stage 3</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">10,000 pts</span>
+                    </div>
+                </div>
+                <div class="stage-item locked" data-stage="4">
+                    <button class="stage-btn" data-stage="4" disabled>
+                        <img src="assets/4c.png" alt="" class="stage-thumb">
+                        <span>Stage 4</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">15,000 pts</span>
+                    </div>
+                </div>
+                <div class="stage-item locked" data-stage="5">
+                    <button class="stage-btn" data-stage="5" disabled>
+                        <img src="assets/5c.png" alt="" class="stage-thumb">
+                        <span>Stage 5</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">20,000 pts</span>
+                    </div>
+                </div>
+                <div class="stage-item locked" data-stage="6">
+                    <button class="stage-btn" data-stage="6" disabled>
+                        <img src="assets/6c.png" alt="" class="stage-thumb">
+                        <span>Stage 6</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">30,000 pts</span>
+                    </div>
+                </div>
+                <div class="stage-item locked" data-stage="7">
+                    <button class="stage-btn" data-stage="7" disabled>
+                        <img src="assets/7c.png" alt="" class="stage-thumb">
+                        <span>Stage 7</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">40,000 pts</span>
+                    </div>
+                </div>
+                <div class="stage-item locked" data-stage="8">
+                    <button class="stage-btn" data-stage="8" disabled>
+                        <img src="assets/8c.png" alt="" class="stage-thumb">
+                        <span>Stage 8</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">50,000 pts</span>
+                    </div>
+                </div>
+                <div class="stage-item locked" data-stage="9">
+                    <button class="stage-btn" data-stage="9" disabled>
+                        <img src="assets/9c.png" alt="" class="stage-thumb">
+                        <span>Stage 9</span>
+                    </button>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="unlock-cost">49,500 pts</span>
+                    </div>
+                </div>
+            </div>
+            <button id="back-to-title" class="small-btn">タイトルへ戻る</button>
+        </div>
+        <!-- 吹き出しツールチップ -->
+        <div id="info-tooltip" class="info-bubble">
+            <div class="bubble-text"></div>
+            <div class="bubble-arrow"></div>
+        </div>
+
+        <!-- ゲーム画面 -->
+        <div id="game-screen" class="screen">
+            <button id="gallery-back" class="game-btn back-btn-top" style="display: none;">戻る</button>
+            <div id="game-container">
+                <!-- 背景画像用Canvas -->
+                <canvas id="bg-canvas"></canvas>
+                <!-- ブロック・ボール・パドル描画用Canvas（操作受付含む） -->
+                <canvas id="game-canvas"></canvas>
+
+                <!-- ゲーム中のUI（戻るボタンなど） -->
+                <div id="game-ui">
+                    <button id="quit-game" class="small-btn">やめる</button>
+                </div>
+                <!-- 中止確認オーバーレイ -->
+                <div id="quit-confirm-overlay" class="game-overlay">
+                    <div class="overlay-content">
+                        <h3>ゲームを中止しますか？</h3>
+                        <p>ここまで獲得したスコアは消失します。</p>
+                        <div class="overlay-buttons">
+                            <button id="quit-yes" class="danger-btn">YES</button>
+                            <button id="quit-no">NO</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- コンティニュー案内オーバーレイ -->
+                <div id="continue-overlay" class="game-overlay">
+                    <div class="overlay-content">
+                        <h3>GAME OVER...</h3>
+                        <p>Continue？</p>
+                        <div class="overlay-buttons">
+                            <button id="continue-yes" class="premium-btn">YES (広告を見て継続)</button>
+                            <button id="continue-no">NO (リザルトへ)</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ギャラリー用UI -->
+                <div id="gallery-ui" style="display: none;">
+                    <div id="gallery-controls">
+                        <button id="gallery-toggle" class="game-btn">表示変更</button>
+                        <button id="gallery-save" class="game-btn">拡大</button>
+                    </div>
+                </div>
+                <!-- ギャラリー未開放オーバーレイ -->
+                <div id="gallery-locked-overlay" class="game-overlay" style="display: none;">
+                    <div class="overlay-content">
+                        <h2 class="locked-title">未開放</h2>
+                        <p id="gallery-locked-reason"></p>
+                    </div>
+                </div>
+            </div>
+            <!-- 下部のAdMobバナー広告想定の余白 -->
+            <div id="ad-banner-space">
+                <p style="color: #666; font-size: 12px; margin-top: 15px;">AdMob Banner Space</p>
+            </div>
+        </div>
+
+        <!-- リザルト画面 -->
+        <div id="result-screen" class="screen">
+            <h2 id="result-message">STAGE CLEAR!</h2>
+            <div id="result-stats"></div>
+            <button id="go-to-bonus">次へ進む</button>
+            <button id="back-from-result-over" style="display:none;">ステージ選択へ</button>
+        </div>
+
+        <!-- クリアボーナス画面 -->
+        <div id="clear-bonus-screen" class="screen">
+            <h2 class="bonus-title">STAGE CLEAR BONUS!</h2>
+            <p class="bonus-desc">強化特典を一つ選んでください</p>
+            <div id="bonus-options-container" class="bonus-options">
+                <!-- ここはJavaScriptで動的に生成されます -->
+            </div>
+        </div>
+
+        <!-- 設定画面 -->
+        <div id="settings-screen" class="screen">
+            <h2>設定</h2>
+            <div class="settings-container" style="width: 80%; max-width: 400px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+                <div class="setting-item" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: stretch;">
+                    <label style="font-weight: bold; margin-bottom: 5px; text-align: left;">BGM音量: <span id="bgm-volume-value">100</span>%</label>
+                    <select id="bgm-volume-select" style="padding: 10px; border-radius: 8px; border: 1px solid #555; background: #333; color: #fff; font-size: 1rem; cursor: pointer;">
+                        <option value="0">0%</option>
+                        <option value="0.1">10%</option>
+                        <option value="0.2">20%</option>
+                        <option value="0.3">30%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.5">50%</option>
+                        <option value="0.6">60%</option>
+                        <option value="0.7">70%</option>
+                        <option value="0.8">80%</option>
+                        <option value="0.9">90%</option>
+                        <option value="1.0" selected>100%</option>
+                    </select>
+                </div>
+                <div class="setting-item" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: stretch;">
+                    <label style="font-weight: bold; margin-bottom: 5px; text-align: left;">効果音音量: <span id="se-volume-value">100</span>%</label>
+                    <select id="se-volume-select" style="padding: 10px; border-radius: 8px; border: 1px solid #555; background: #333; color: #fff; font-size: 1rem; cursor: pointer;">
+                        <option value="0">0%</option>
+                        <option value="0.1">10%</option>
+                        <option value="0.2">20%</option>
+                        <option value="0.3">30%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.5">50%</option>
+                        <option value="0.6">60%</option>
+                        <option value="0.7">70%</option>
+                        <option value="0.8">80%</option>
+                        <option value="0.9">90%</option>
+                        <option value="1.0" selected>100%</option>
+                    </select>
+                </div>
+                <div class="setting-item" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: stretch;">
+                    <label style="font-weight: bold; margin-bottom: 5px; text-align: left;">色覚サポート:</label>
+                    <div style="display: flex; align-items: center; justify-content: flex-start; gap: 10px; background: #333; padding: 10px; border-radius: 8px; border: 1px solid #555;">
+                        <input type="checkbox" id="color-blind-toggle" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span id="color-blind-label" style="font-size: 0.9rem; color: #fff;">オフ</span>
+                    </div>
+                </div>
+                <div style="margin-top: 30px; text-align: center;">
+                    <button id="data-reset-btn" class="small-btn"
+                        style="background: #e74c3c; border: none; color: #fff; padding: 10px 20px; border-radius: 8px; width: 100%; margin: 0;">プレイデータ初期化</button>
+                </div>
+            </div>
+            <button id="back-to-title-from-settings" class="small-btn" style="margin-top: 10px;">戻る</button>
+        </div>
+
+        <!-- EXTRAモード情報モーダル -->
+        <div id="extra-info-modal" class="overlay">
+            <div class="modal-content">
+                <h2>情報</h2>
+                <div class="info-text" style="line-height: 1.6; margin: 20px 0; text-align: left;">
+                    <!-- 文言はJSで動的に設定されます -->
+                </div>
+                <button id="close-extra-info" class="small-btn">閉じる</button>
+            </div>
+        </div>
+
+    </div> <!-- #app end -->
+    <script src="game.js"></script>
+</body>
+
+</html>
