@@ -38,6 +38,15 @@ jobs:
         npx cap add android
         npx cap sync android
 
+    - name: Update Target SDK to 35
+      run: |
+        sed -i 's/targetSdkVersion 34/targetSdkVersion 35/' android/app/build.gradle
+        sed -i 's/compileSdkVersion 34/compileSdkVersion 35/' android/app/build.gradle
+        sed -i 's/targetSdk = 34/targetSdk = 35/' android/app/build.gradle
+        sed -i 's/compileSdk = 34/compileSdk = 35/' android/app/build.gradle
+        echo "--- build.gradle の確認 ---"
+        grep -E "compileSdk|targetSdk" android/app/build.gradle
+
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
