@@ -1,23 +1,18 @@
-name: Build Android APK
-
+name: Build Signed Android AAB
 on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v4
-
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-
     - name: Prepare Web Directory
       run: |
         mkdir www
@@ -29,29 +24,31 @@ jobs:
           "webDir": "www",
           "bundledWebRuntime": false
         }' > capacitor.config.json
-
     - name: Install Dependencies
       run: npm install
-
     - name: Initialize Capacitor Android
       run: |
         npx cap add android
         npx cap sync android
-
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
-
-    - name: Build Android App Bundle (AAB)
+    - name: Decode Keystore
+      run: |
+        echo "${{ secrets.KEY_STORE_BASE64 }}" | base64 --decode > android/app/my-release-key.jks
+    - name: Build Signed AAB
       run: |
         cd android
         chmod +x gradlew
-        ./gradlew bundleRelease
-
-    - name: Upload AAB
+        ./gradlew bundleRelease \
+          -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/my-release-key.jks \
+          -Pandroid.injected.signing.store.password=${{ secrets.KEY_STORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=my-key-alias \
+          -Pandroid.injected.signing.key.password=${{ secrets.KEY_ALIAS_PASSWORD }}
+    - name: Upload Signed AAB
       uses: actions/upload-artifact@v4
       with:
-        name: blockbreaker-release-aab
+        name: blockbreaker-signed-aab
         path: android/app/build/outputs/bundle/release/app-release.aab
