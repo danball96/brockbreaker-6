@@ -315,6 +315,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 広告クリック時にゲームを一時停止する
+    window.addEventListener('pauseGameFromAd', () => {
+        if (isGameStarted && !isGameOver && !isGameClear && !isPaused) {
+            isPaused = true;
+            document.getElementById('quit-confirm-overlay').classList.add('active');
+            bgmAudio.pause();
+        }
+    });
+
     // --- ステージ選択画面の初期化・更新 ---
     function getStageUnlockCost(stageNum) {
         switch (stageNum) {
