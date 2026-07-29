@@ -23,15 +23,26 @@ jobs:
         mkdir www
         cp index.html game.js style.css www/
         cp -r assets www/
+        cp admob.js www/
         echo '{
           "appId": "brock_breaker_06.com.example.myapp",
           "appName": "ブロック崩し",
           "webDir": "www",
-          "bundledWebRuntime": false
+          "bundledWebRuntime": false,
+          "plugins": {
+            "AdMob": {
+              "appId": "ca-app-pub-9929972384411537~8811544683"
+            }
+          }
         }' > capacitor.config.json
 
     - name: Install Dependencies
-      run: npm install
+      run: |
+        npm install
+        npm install @capacitor-community/admob
+        npm install -g esbuild
+        npx esbuild admob.js --bundle --outfile=www/admob-bundle.js
+        sed -i 's/<\/body>/<script src="admob-bundle.js"><\/script>\n<\/body>/' www/index.html
 
     - name: Initialize Capacitor Android
       run: |
@@ -49,7 +60,7 @@ jobs:
           sed -i -E 's/compileSdk([ =]+)[0-9]+/compileSdk\135/' android/app/build.gradle
           sed -i -E 's/targetSdkVersion([ =]+)[0-9]+/targetSdkVersion\135/' android/app/build.gradle
           sed -i -E 's/compileSdkVersion([ =]+)[0-9]+/compileSdkVersion\135/' android/app/build.gradle
-          sed -i -E 's/versionCode [0-9]+/versionCode 4/' android/app/build.gradle
+          sed -i -E 's/versionCode [0-9]+/versionCode 5/' android/app/build.gradle
         fi
 
     - name: Setup Java JDK
