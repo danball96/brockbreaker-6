@@ -40,13 +40,17 @@ jobs:
 
     - name: Update Target SDK and Version Code
       run: |
-        sed -i 's/targetSdkVersion 34/targetSdkVersion 35/' android/app/build.gradle
-        sed -i 's/compileSdkVersion 34/compileSdkVersion 35/' android/app/build.gradle
-        sed -i 's/targetSdk = 34/targetSdk = 35/' android/app/build.gradle
-        sed -i 's/compileSdk = 34/compileSdk = 35/' android/app/build.gradle
-        sed -i 's/versionCode 1/versionCode 2/' android/app/build.gradle
-        echo "--- build.gradle の確認 ---"
-        grep -E "compileSdk|targetSdk|versionCode" android/app/build.gradle
+        if [ -f android/variables.gradle ]; then
+          sed -i -E 's/targetSdkVersion([ =]+)[0-9]+/targetSdkVersion\135/' android/variables.gradle
+          sed -i -E 's/compileSdkVersion([ =]+)[0-9]+/compileSdkVersion\135/' android/variables.gradle
+        fi
+        if [ -f android/app/build.gradle ]; then
+          sed -i -E 's/targetSdk([ =]+)[0-9]+/targetSdk\135/' android/app/build.gradle
+          sed -i -E 's/compileSdk([ =]+)[0-9]+/compileSdk\135/' android/app/build.gradle
+          sed -i -E 's/targetSdkVersion([ =]+)[0-9]+/targetSdkVersion\135/' android/app/build.gradle
+          sed -i -E 's/compileSdkVersion([ =]+)[0-9]+/compileSdkVersion\135/' android/app/build.gradle
+          sed -i -E 's/versionCode [0-9]+/versionCode 3/' android/app/build.gradle
+        fi
 
     - name: Setup Java JDK
       uses: actions/setup-java@v4
