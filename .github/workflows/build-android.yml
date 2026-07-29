@@ -38,7 +38,7 @@ jobs:
         npx cap add android
         npx cap sync android
 
-        - name: Update Target SDK and Version Code
+    - name: Update Target SDK and Version Code
       run: |
         sed -i 's/targetSdkVersion 34/targetSdkVersion 35/' android/app/build.gradle
         sed -i 's/compileSdkVersion 34/compileSdkVersion 35/' android/app/build.gradle
