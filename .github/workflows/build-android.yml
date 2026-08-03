@@ -67,7 +67,12 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '21'
+
+    - name: Configure Gradle User Home
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/.gradle
+        echo "GRADLE_USER_HOME=$GITHUB_WORKSPACE/.gradle" >> $GITHUB_ENV
 
     - name: Decode Keystore
       run: |
@@ -77,7 +82,7 @@ jobs:
       run: |
         cd android
         chmod +x gradlew
-        ./gradlew bundleRelease --no-build-cache --no-daemon \
+        ./gradlew bundleRelease ¥
           -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/my-release-key.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEY_STORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=my-key-alias \
