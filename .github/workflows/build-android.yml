@@ -60,8 +60,13 @@ jobs:
           sed -i -E 's/compileSdk([ =]+)[0-9]+/compileSdk\135/' android/app/build.gradle
           sed -i -E 's/targetSdkVersion([ =]+)[0-9]+/targetSdkVersion\135/' android/app/build.gradle
           sed -i -E 's/compileSdkVersion([ =]+)[0-9]+/compileSdkVersion\135/' android/app/build.gradle
-          sed -i -E 's/versionCode [0-9]+/versionCode 5/' android/app/build.gradle
+          sed -i -E 's/versionCode [0-9]+/versionCode 6/' android/app/build.gradle
         fi
+
+    - name: Update Gradle Wrapper Version
+      run: |
+        sed -i 's/gradle-8.2.1-all/gradle-8.7-all/' android/gradle/wrapper/gradle-wrapper.properties || true
+        cat android/gradle/wrapper/gradle-wrapper.properties
 
     - name: Setup Java JDK
       uses: actions/setup-java@v4
@@ -69,20 +74,17 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-    - name: Configure Gradle User Home
-      run: |
-        mkdir -p $GITHUB_WORKSPACE/.gradle
-        echo "GRADLE_USER_HOME=$GITHUB_WORKSPACE/.gradle" >> $GITHUB_ENV
-
     - name: Decode Keystore
       run: |
         echo "${{ secrets.KEY_STORE_BASE64 }}" | base64 --decode > android/app/my-release-key.jks
 
     - name: Build Signed AAB
+      env:
+        GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
       run: |
         cd android
         chmod +x gradlew
-        ./gradlew bundleRelease ¥
+        ./gradlew bundleRelease \
           -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/my-release-key.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEY_STORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=my-key-alias \
