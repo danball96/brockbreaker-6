@@ -77,7 +77,7 @@ jobs:
       run: |
         cd android
         chmod +x gradlew
-        ./gradlew bundleRelease \
+        ./gradlew bundleRelease --no-build-cache --no-daemon \
           -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/app/my-release-key.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEY_STORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=my-key-alias \
