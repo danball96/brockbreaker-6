@@ -9,22 +9,30 @@ print("Found MainActivity:", path)
 with open(path, 'r') as f:
     content = f.read()
 
-# AdMob 用 import を追加（class 宣言の直前）
+print("=== ORIGINAL FILE ===")
+print(content)
+print("=== END ORIGINAL ===")
+
+# AdMob 用 import を追加
 admob_imports = (
-    "import com.google.android.gms.ads.MobileAds;\n"
+    "import android.os.Bundle;\n"
+    "import android.view.Gravity;\n"
+    "import android.widget.FrameLayout;\n"
+    "import android.view.ViewGroup;\n"
     "import com.google.android.gms.ads.AdRequest;\n"
     "import com.google.android.gms.ads.AdSize;\n"
     "import com.google.android.gms.ads.AdView;\n"
-    "import android.widget.FrameLayout;\n"
-    "import android.view.Gravity;\n"
-    "import android.view.ViewGroup;\n"
+    "import com.google.android.gms.ads.MobileAds;\n"
 )
-content = re.sub(r'(?=public class MainActivity)', admob_imports, content)
 
-# バナー広告の初期化コードを super.onCreate() の直後に追加
-# addContentView() ではなく、WebViewと同じ親レイアウト（android.R.id.content）に追加する
-admob_code = (
-    "\n        MobileAds.initialize(this, s -> {\n        });\n"
+# 既にimportがある場合は重複を避ける
+if "import com.google.android.gms.ads.MobileAds;" not in content:
+    content = re.sub(r'(?=public class MainActivity)', admob_imports, content)
+
+# バナー広告コード
+admob_banner_code = (
+    "        MobileAds.initialize(this, s -> {\n"
+    "        });\n"
     "        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(new Runnable() {\n"
     "            public void run() {\n"
     "                try {\n"
@@ -35,22 +43,46 @@ admob_code = (
     "                        FrameLayout.LayoutParams.MATCH_PARENT,\n"
     "                        FrameLayout.LayoutParams.WRAP_CONTENT);\n"
     "                    lp.gravity = Gravity.BOTTOM;\n"
-    "                    // WebViewと同じ親FrameLayoutに追加（WebViewの上に重ねる）\n"
-    "                    FrameLayout contentFrame = (FrameLayout) getWindow().getDecorView().getRootView();\n"
-    "                    contentFrame.addView(adView, lp);\n"
+    "                    FrameLayout decorView = (FrameLayout) getWindow().getDecorView();\n"
+    "                    decorView.addView(adView, lp);\n"
     "                    adView.loadAd(new AdRequest.Builder().build());\n"
-    "                    android.util.Log.d(\"AdMob\", \"Banner ad loaded successfully\");\n"
+    "                    android.util.Log.d(\"AdMob\", \"Banner ad added to decorView\");\n"
     "                } catch (Exception e) {\n"
-    "                    android.util.Log.e(\"AdMob\", \"Failed to load banner ad: \" + e.getMessage());\n"
+    "                    android.util.Log.e(\"AdMob\", \"Error: \" + e.getMessage());\n"
     "                }\n"
     "            }\n"
     "        }, 2000);\n"
 )
-content = re.sub(r'(super\.onCreate\(savedInstanceState\);)', r'\1' + admob_code, content)
+
+if 'super.onCreate' in content:
+    # すでにonCreateがある場合はsuper.onCreate()の直後に挿入
+    print("INFO: onCreate already exists. Inserting after super.onCreate.")
+    content = re.sub(
+        r'(super\.onCreate\([^)]*\);)',
+        r'\1\n' + admob_banner_code,
+        content
+    )
+else:
+    # onCreateが存在しない場合（Capacitorのデフォルト）は新しく追加
+    print("INFO: onCreate not found. Adding new onCreate method.")
+    new_oncreate = (
+        "\n    @Override\n"
+        "    protected void onCreate(Bundle savedInstanceState) {\n"
+        "        super.onCreate(savedInstanceState);\n"
+        + admob_banner_code +
+        "    }\n"
+    )
+    # クラス本体の開始 { の直後に挿入
+    content = re.sub(
+        r'(public class MainActivity extends BridgeActivity\s*\{)',
+        r'\1' + new_oncreate,
+        content
+    )
 
 with open(path, 'w') as f:
     f.write(content)
 
-print("MainActivity updated successfully.")
-print("--- Modified file ---")
+print("=== MODIFIED FILE ===")
 print(content)
+print("=== END MODIFIED ===")
+print("Done.")
