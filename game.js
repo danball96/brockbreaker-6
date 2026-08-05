@@ -777,7 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const allChoices = [
             { id: 'restore', title: 'ブロック復活量', val: '-0.6%', type: 'restore', isMaxed: () => BLOCK_RESTORE_RATE <= 0 },
             { id: 'laser', title: 'レーザー準備時間', val: '-5.0s', type: 'laser', isMaxed: () => LASER_CHARGE_TIME <= 10.0 },
-            { id: 'points', title: 'ポイント獲得倍率', val: '+3.0%', type: 'points', isMaxed: () => POINTS_BONUS_RATE >= 150.0 },
+            { id: 'points', title: 'ポイント獲得倍率', val: '+3.0%', type: 'points', isMaxed: () => POINTS_BONUS_RATE >= 100.0 },
             { id: 'item', title: 'アイテムドロップ率', val: '+0.4%', type: 'item', isMaxed: () => ITEM_DROP_RATE >= 10.0 },
             { id: 'ad', title: 'コマーシャル頻度', val: '-5.0%', type: 'ad', isMaxed: () => AD_FREQUENCY <= 0 }
         ];
@@ -1277,7 +1277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (maxItem) maxItem.style.display = (ITEM_DROP_RATE >= 10.0 && gameMode !== 'extra') ? 'inline-block' : 'none';
 
         // ボーナスとAD頻度は常に条件どおり
-        if (maxBonus) maxBonus.style.display = (POINTS_BONUS_RATE >= 150.0) ? 'inline-block' : 'none';
+        if (maxBonus) maxBonus.style.display = (POINTS_BONUS_RATE >= 100.0) ? 'inline-block' : 'none';
         if (maxAd) maxAd.style.display = (AD_FREQUENCY <= 0) ? 'inline-block' : 'none';
 
         updateBonusButtons();
@@ -1313,7 +1313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('breakout_laser_time', LASER_CHARGE_TIME.toString());
         }
         if (type === 'points') {
-            POINTS_BONUS_RATE = Math.min(150.0, POINTS_BONUS_RATE + 3.0);
+            POINTS_BONUS_RATE = Math.min(100.0, POINTS_BONUS_RATE + 3.0);
             localStorage.setItem('breakout_points_bonus', POINTS_BONUS_RATE.toString());
         }
         if (type === 'ad') {
@@ -1629,8 +1629,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 全項目が最大強化済みならスキップ
         const isAllMaxed = (BLOCK_RESTORE_RATE <= 0) &&
             (LASER_CHARGE_TIME <= 10.0) &&
-            (POINTS_BONUS_RATE >= 150.0) &&
-            (ITEM_DROP_RATE >= 5.0) &&
+            (POINTS_BONUS_RATE >= 100.0) &&
+            (ITEM_DROP_RATE >= 10.0) &&
             (AD_FREQUENCY <= 0);
 
         if (isAllMaxed) {
